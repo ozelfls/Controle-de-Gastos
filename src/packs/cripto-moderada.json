@@ -1,0 +1,18 @@
+{
+  "id": "cripto-moderada",
+  "name": "Cripto Moderada",
+  "priority": 40,
+  "conditions": {
+    "reserveInMonthsMin": 3,
+    "healthySurplusRequired": true
+  },
+  "messages": [
+    "Uma exposicao pequena a ativos volateis so deve ser considerada com reserva formada e sobra recorrente."
+  ],
+  "allocations": {
+    "reserve": 0.25,
+    "debtPayment": 0.15,
+    "investments": 0.1,
+    "flexibleSpend": 0.5
+  }
+}

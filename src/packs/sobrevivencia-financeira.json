@@ -1,0 +1,16 @@
+{
+  "id": "sobrevivencia-financeira",
+  "name": "Sobrevivencia Financeira",
+  "priority": 100,
+  "conditions": {
+    "negativeSurplus": true
+  },
+  "messages": [
+    "Corte gastos variaveis, preserve contas essenciais e reorganize vencimentos antes de qualquer nova meta."
+  ],
+  "allocations": {
+    "essentialBills": 0.75,
+    "debtPayment": 0.2,
+    "flexibleSpend": 0.05
+  }
+}

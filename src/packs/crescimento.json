@@ -1,0 +1,17 @@
+{
+  "id": "crescimento",
+  "name": "Crescimento",
+  "priority": 45,
+  "conditions": {
+    "reserveInMonthsMin": 2,
+    "debtAllowed": false
+  },
+  "messages": [
+    "Com estabilidade, parte da sobra pode ir para objetivos de crescimento sem prejudicar seguranca."
+  ],
+  "allocations": {
+    "reserve": 0.3,
+    "investments": 0.25,
+    "flexibleSpend": 0.45
+  }
+}

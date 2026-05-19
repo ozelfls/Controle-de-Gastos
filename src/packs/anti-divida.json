@@ -1,0 +1,16 @@
+{
+  "id": "anti-divida",
+  "name": "Anti-Divida",
+  "priority": 90,
+  "conditions": {
+    "hasDebt": true
+  },
+  "messages": [
+    "Dividas ativas devem receber prioridade antes de metas de consumo ou risco moderado."
+  ],
+  "allocations": {
+    "reserve": 0.15,
+    "debtPayment": 0.55,
+    "flexibleSpend": 0.3
+  }
+}

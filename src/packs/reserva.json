@@ -1,0 +1,16 @@
+{
+  "id": "reserva",
+  "name": "Reserva",
+  "priority": 80,
+  "conditions": {
+    "reserveInMonthsMax": 3
+  },
+  "messages": [
+    "Aumente a reserva antes de comprometer a sobra com metas menos urgentes."
+  ],
+  "allocations": {
+    "reserve": 0.6,
+    "debtPayment": 0.15,
+    "flexibleSpend": 0.25
+  }
+}

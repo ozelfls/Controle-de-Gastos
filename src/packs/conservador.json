@@ -1,0 +1,17 @@
+{
+  "id": "conservador",
+  "name": "Conservador",
+  "priority": 60,
+  "conditions": {
+    "reserveInMonthsMin": 1,
+    "debtAllowed": false
+  },
+  "messages": [
+    "Priorize reserva, previsibilidade e compromissos essenciais antes de qualquer exposicao a risco."
+  ],
+  "allocations": {
+    "reserve": 0.35,
+    "debtPayment": 0.25,
+    "flexibleSpend": 0.4
+  }
+}
