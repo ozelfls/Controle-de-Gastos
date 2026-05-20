@@ -1,3 +1,4 @@
+import { invoke, isTauri } from "@tauri-apps/api/core";
 import { goals, transactions } from "../data/mockFinance";
 import { getCurrentMonthKey } from "../lib/date";
 import type { Goal, Transaction } from "../types/finance";
@@ -19,6 +20,7 @@ export type FinanceRepository = {
   readonly driver: FinanceRepositoryDriver;
   clear: () => void;
   load: () => PersistedFinanceState;
+  loadPersisted: () => Promise<PersistedFinanceState>;
   reset: () => PersistedFinanceState;
   save: (state: PersistedFinanceState) => void;
 };
@@ -57,6 +59,10 @@ export class LocalStorageFinanceRepository implements FinanceRepository {
     }
   }
 
+  async loadPersisted() {
+    return this.load();
+  }
+
   save(state: PersistedFinanceState) {
     if (!this.storage) {
       return;
@@ -79,8 +85,58 @@ export class LocalStorageFinanceRepository implements FinanceRepository {
   }
 }
 
+export class TauriSqliteFinanceRepository implements FinanceRepository {
+  readonly driver = "tauri-sqlite" as const;
+
+  constructor(
+    private readonly fallbackRepository = new LocalStorageFinanceRepository(),
+  ) {}
+
+  load() {
+    return this.fallbackRepository.load();
+  }
+
+  async loadPersisted() {
+    try {
+      const persistedState = await invoke<PersistedFinanceState | null>(
+        "finance_load_state",
+      );
+
+      if (persistedState) {
+        return normalizePersistedState(persistedState);
+      }
+
+      const seedState = this.fallbackRepository.load();
+      await invoke("finance_save_state", { state: seedState });
+      return seedState;
+    } catch {
+      return this.fallbackRepository.load();
+    }
+  }
+
+  save(state: PersistedFinanceState) {
+    void invoke("finance_save_state", { state }).catch(() => {
+      this.fallbackRepository.save(state);
+    });
+  }
+
+  clear() {
+    void invoke("finance_clear_state").catch(() => {
+      this.fallbackRepository.clear();
+    });
+  }
+
+  reset() {
+    const seedState = createSeedFinanceState();
+    this.save(seedState);
+    return seedState;
+  }
+}
+
 export const financeRepository: FinanceRepository =
-  new LocalStorageFinanceRepository();
+  isTauriRuntime()
+    ? new TauriSqliteFinanceRepository()
+    : new LocalStorageFinanceRepository();
 
 export function loadPersistedFinanceState() {
   return financeRepository.load();
@@ -145,4 +201,12 @@ function getBrowserStorage() {
   }
 
   return window.localStorage;
+}
+
+function isTauriRuntime() {
+  try {
+    return isTauri();
+  } catch {
+    return false;
+  }
 }

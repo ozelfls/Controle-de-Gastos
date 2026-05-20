@@ -49,9 +49,16 @@ export function App() {
   const isLocked = useSecurityStore((state) => state.isLocked);
   const lock = useSecurityStore((state) => state.lock);
   const unlockWithPin = useSecurityStore((state) => state.unlockWithPin);
+  const hydrateFromRepository = useFinanceStore(
+    (state) => state.hydrateFromRepository,
+  );
   const selectedMonth = useFinanceStore((state) => state.selectedMonth);
   const setSelectedMonth = useFinanceStore((state) => state.setSelectedMonth);
   const lastActivityRef = useRef(Date.now());
+
+  useEffect(() => {
+    void hydrateFromRepository();
+  }, [hydrateFromRepository]);
 
   useEffect(() => {
     if (!hasPin || isLocked) {

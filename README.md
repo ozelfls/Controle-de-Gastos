@@ -11,7 +11,7 @@ Assistente financeiro pessoal desktop-first, offline-first e privado.
 - Zod para validacao futura
 - Recharts para graficos
 - Tauri para distribuicao desktop
-- SQLite local planejado para persistencia
+- SQLite local via Tauri para persistencia desktop
 
 ## Scripts
 
@@ -46,4 +46,5 @@ Primeira base do MVP:
 - tema escuro;
 - PIN local, bloqueio automatico e ocultacao de valores sensiveis;
 - backup/importacao JSON local;
-- estrutura inicial para banco SQLite e Tauri.
+- persistencia SQLite no desktop via comandos Tauri;
+- fallback em armazenamento local para preview web.

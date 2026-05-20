@@ -2,6 +2,7 @@ import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { TransactionForm } from "../components/transactions/TransactionForm";
 import { TransactionsTable } from "../components/transactions/TransactionsTable";
+import { Badge } from "../components/ui/badge";
 import { useFinanceStore } from "../stores/useFinanceStore";
 import type { BillStatus, Transaction, TransactionType } from "../types/finance";
 
@@ -43,25 +44,39 @@ export function Lancamentos() {
   );
 
   return (
-    <div className="mx-auto grid w-full max-w-7xl gap-5 xl:grid-cols-[420px_1fr]">
-      <TransactionForm
-        initialTransaction={editingTransaction}
-        onCancel={() => setEditingTransaction(null)}
-        onSubmit={(input) => {
-          if (editingTransaction) {
-            updateTransaction(editingTransaction.id, input);
-            setEditingTransaction(null);
-            return;
-          }
+    <div className="mx-auto grid w-full max-w-7xl gap-4">
+      <section className="rounded-md border border-border-soft bg-surface p-4">
+        <TransactionForm
+          initialTransaction={editingTransaction}
+          onCancel={() => setEditingTransaction(null)}
+          onSubmit={(input) => {
+            if (editingTransaction) {
+              updateTransaction(editingTransaction.id, input);
+              setEditingTransaction(null);
+              return;
+            }
 
-          addTransaction(input);
-        }}
-        submitLabel={editingTransaction ? "Atualizar lancamento" : undefined}
-      />
+            addTransaction(input);
+          }}
+          submitLabel={editingTransaction ? "Atualizar lancamento" : undefined}
+        />
+      </section>
 
-      <div className="grid gap-4">
+      <div className="grid min-h-0 gap-4">
         <section className="rounded-md border border-border-soft bg-surface p-4">
-          <div className="grid gap-3 lg:grid-cols-[1fr_170px_170px]">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="text-base font-semibold">Historico do mes</h2>
+              <p className="text-sm text-ink-muted">
+                Filtre, edite e acompanhe os registros usados nos indicadores.
+              </p>
+            </div>
+            <Badge>
+              {filteredTransactions.length} de {transactions.length}
+            </Badge>
+          </div>
+
+          <div className="grid gap-3 lg:grid-cols-[1fr_160px_160px]">
             <label className="grid gap-2 text-sm">
               <span className="font-medium">Buscar</span>
               <div className="relative">

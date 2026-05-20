@@ -28,6 +28,7 @@ type FinanceStore = {
   recommendations: Recommendation[];
   addTransaction: (input: NewTransactionInput) => void;
   addGoalContribution: (goalId: string, amount: number) => void;
+  hydrateFromRepository: () => Promise<void>;
   importFinanceData: (data: {
     activeStrategyPackIds: string[];
     selectedMonth: string;
@@ -147,6 +148,24 @@ export const useFinanceStore = create<FinanceStore>((set) => ({
         ),
       };
     }),
+  hydrateFromRepository: async () => {
+    const persistedState = await financeRepository.loadPersisted();
+
+    set(() => ({
+      transactions: persistedState.transactions,
+      activeStrategyPackIds: persistedState.activeStrategyPackIds,
+      goals: persistedState.goals,
+      selectedMonth: persistedState.selectedMonth,
+      strategyAggressiveness: persistedState.strategyAggressiveness,
+      ...createDerivedState(
+        persistedState.transactions,
+        persistedState.goals,
+        persistedState.activeStrategyPackIds,
+        persistedState.strategyAggressiveness,
+        persistedState.selectedMonth,
+      ),
+    }));
+  },
   importFinanceData: (data) =>
     set(() => {
       financeRepository.save(data);

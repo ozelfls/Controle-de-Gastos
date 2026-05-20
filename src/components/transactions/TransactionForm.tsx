@@ -115,20 +115,19 @@ export function TransactionForm({
   }
 
   return (
-    <form
-      className="rounded-md border border-border-soft bg-surface p-4"
-      onSubmit={handleSubmit}
-    >
-      <div className="mb-4">
+    <form onSubmit={handleSubmit}>
+      <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
+        <div>
         <h2 className="text-base font-semibold">Novo lancamento</h2>
         <p className="text-sm text-ink-muted">
           {initialTransaction
             ? "Atualize um registro existente."
             : "Registro local para alimentar indicadores e recomendacoes."}
         </p>
+        </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[140px_170px_minmax(220px,1fr)_140px_145px_140px_130px]">
         <label className="grid gap-2 text-sm">
           <span className="font-medium">Tipo</span>
           <select
@@ -163,7 +162,7 @@ export function TransactionForm({
           </select>
         </label>
 
-        <label className="grid gap-2 text-sm md:col-span-2">
+        <label className="grid gap-2 text-sm md:col-span-2 xl:col-span-1">
           <span className="font-medium">Descricao</span>
           <input
             className="h-10 rounded-md border border-border-soft bg-surface-raised px-3 text-ink placeholder:text-ink-muted"
@@ -195,23 +194,22 @@ export function TransactionForm({
           />
         </label>
 
-        {requiresStatus && (
-          <label className="grid gap-2 text-sm">
-            <span className="font-medium">Status</span>
-            <select
-              className="h-10 rounded-md border border-border-soft bg-surface-raised px-3 text-ink"
-              onChange={(event) =>
-                updateForm("status", event.target.value as BillStatus)
-              }
-              value={form.status}
-            >
-              <option value="pending">Pendente</option>
-              <option value="paid">Pago</option>
-            </select>
-          </label>
-        )}
+        <label className="grid gap-2 text-sm">
+          <span className="font-medium">Status</span>
+          <select
+            className="h-10 rounded-md border border-border-soft bg-surface-raised px-3 text-ink disabled:cursor-not-allowed disabled:text-ink-muted"
+            disabled={!requiresStatus}
+            onChange={(event) =>
+              updateForm("status", event.target.value as BillStatus)
+            }
+            value={form.status}
+          >
+            <option value="pending">Pendente</option>
+            <option value="paid">Pago</option>
+          </select>
+        </label>
 
-        <label className="flex items-center gap-3 self-end text-sm">
+        <label className="flex h-10 items-center gap-3 self-end rounded-md border border-border-soft bg-surface-raised px-3 text-sm">
           <input
             checked={form.recurring}
             className="h-4 w-4 accent-teal-strong"
@@ -228,7 +226,7 @@ export function TransactionForm({
         </p>
       )}
 
-      <div className="mt-5 flex justify-end">
+      <div className="mt-4 flex justify-end">
         {initialTransaction && onCancel && (
           <Button
             className="mr-2"

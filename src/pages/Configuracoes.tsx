@@ -14,6 +14,7 @@ import {
   downloadBackup,
   parseBackupPayload,
 } from "../services/backup";
+import { financeRepository } from "../services/financeRepository";
 import { useFinanceStore } from "../stores/useFinanceStore";
 import { useSecurityStore } from "../stores/useSecurityStore";
 import type { AutoLockMinutes } from "../types/security";
@@ -221,8 +222,9 @@ export function Configuracoes() {
           <div>
             <h2 className="text-lg font-semibold">Dados locais</h2>
             <p className="text-sm text-ink-muted">
-              Neste preview, os dados ficam no armazenamento local do dispositivo.
-              No desktop final, esta camada sera substituida por SQLite via Tauri.
+              {financeRepository.driver === "tauri-sqlite"
+                ? "No desktop, os dados financeiros sao gravados em SQLite local via Tauri."
+                : "Neste preview web, os dados ficam no armazenamento local do dispositivo."}
             </p>
           </div>
         </div>
