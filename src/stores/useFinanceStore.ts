@@ -4,12 +4,7 @@ import { snapshots } from "../data/mockFinance";
 import { getCurrentMonthKey, isDateInMonth } from "../lib/date";
 import { calculateIndicators } from "../rules/indicators";
 import { generateRecommendations } from "../rules/recommendations";
-import {
-  clearPersistedFinanceState,
-  loadPersistedFinanceState,
-  loadSeedFinanceState,
-  persistFinanceState,
-} from "../services/localFinanceStorage";
+import { financeRepository } from "../services/financeRepository";
 import type {
   BillStatus,
   FinancialIndicators,
@@ -74,7 +69,7 @@ function createDerivedState(
   };
 }
 
-const initialState = loadPersistedFinanceState();
+const initialState = financeRepository.load();
 const initialDerivedState = createDerivedState(
   initialState.transactions,
   initialState.goals,
@@ -100,7 +95,7 @@ export const useFinanceStore = create<FinanceStore>((set) => ({
         },
         ...state.transactions,
       ];
-      persistFinanceState({
+      financeRepository.save({
         activeStrategyPackIds: state.activeStrategyPackIds,
         selectedMonth: state.selectedMonth,
         strategyAggressiveness: state.strategyAggressiveness,
@@ -133,7 +128,7 @@ export const useFinanceStore = create<FinanceStore>((set) => ({
           : goal,
       );
 
-      persistFinanceState({
+      financeRepository.save({
         activeStrategyPackIds: state.activeStrategyPackIds,
         selectedMonth: state.selectedMonth,
         strategyAggressiveness: state.strategyAggressiveness,
@@ -154,7 +149,7 @@ export const useFinanceStore = create<FinanceStore>((set) => ({
     }),
   importFinanceData: (data) =>
     set(() => {
-      persistFinanceState(data);
+      financeRepository.save(data);
 
       return {
         activeStrategyPackIds: data.activeStrategyPackIds,
@@ -177,7 +172,7 @@ export const useFinanceStore = create<FinanceStore>((set) => ({
         (transaction) => transaction.id !== transactionId,
       );
 
-      persistFinanceState({
+      financeRepository.save({
         activeStrategyPackIds: state.activeStrategyPackIds,
         selectedMonth: state.selectedMonth,
         strategyAggressiveness: state.strategyAggressiveness,
@@ -198,8 +193,7 @@ export const useFinanceStore = create<FinanceStore>((set) => ({
     }),
   resetToSeedData: () =>
     set(() => {
-      clearPersistedFinanceState();
-      const nextState = loadSeedFinanceState();
+      const nextState = financeRepository.reset();
 
       return {
         transactions: nextState.transactions,
@@ -218,7 +212,7 @@ export const useFinanceStore = create<FinanceStore>((set) => ({
     }),
   setSelectedMonth: (selectedMonth) =>
     set((state) => {
-      persistFinanceState({
+      financeRepository.save({
         activeStrategyPackIds: state.activeStrategyPackIds,
         selectedMonth,
         strategyAggressiveness: state.strategyAggressiveness,
@@ -239,7 +233,7 @@ export const useFinanceStore = create<FinanceStore>((set) => ({
     }),
   setStrategyAggressiveness: (aggressiveness) =>
     set((state) => {
-      persistFinanceState({
+      financeRepository.save({
         activeStrategyPackIds: state.activeStrategyPackIds,
         selectedMonth: state.selectedMonth,
         strategyAggressiveness: aggressiveness,
@@ -264,7 +258,7 @@ export const useFinanceStore = create<FinanceStore>((set) => ({
         ? state.activeStrategyPackIds.filter((id) => id !== packId)
         : [...state.activeStrategyPackIds, packId];
 
-      persistFinanceState({
+      financeRepository.save({
         activeStrategyPackIds: nextActiveStrategyPackIds,
         selectedMonth: state.selectedMonth,
         strategyAggressiveness: state.strategyAggressiveness,
@@ -289,7 +283,7 @@ export const useFinanceStore = create<FinanceStore>((set) => ({
         transaction.id === transactionId ? { ...input, id: transaction.id } : transaction,
       );
 
-      persistFinanceState({
+      financeRepository.save({
         activeStrategyPackIds: state.activeStrategyPackIds,
         selectedMonth: state.selectedMonth,
         strategyAggressiveness: state.strategyAggressiveness,
@@ -314,7 +308,7 @@ export const useFinanceStore = create<FinanceStore>((set) => ({
         transaction.id === transactionId ? { ...transaction, status } : transaction,
       );
 
-      persistFinanceState({
+      financeRepository.save({
         activeStrategyPackIds: state.activeStrategyPackIds,
         selectedMonth: state.selectedMonth,
         strategyAggressiveness: state.strategyAggressiveness,
